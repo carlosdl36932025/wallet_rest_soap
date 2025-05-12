@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions 
+  name="WalletService"
+  targetNamespace="urn:WalletService"
+  xmlns="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:tns="urn:WalletService"
+  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+
+  <types>
+    <xsd:schema targetNamespace="urn:WalletService">
+
+      <xsd:complexType name="Response">
+        <xsd:sequence>
+          <xsd:element name="success" type="xsd:boolean"/>
+          <xsd:element name="cod_error" type="xsd:string"/>
+          <xsd:element name="message_error" type="xsd:string" minOccurs="0"/>
+          <xsd:element name="data" type="tns:GenericData"/>
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:complexType name="GenericData">
+        <xsd:sequence>
+          <xsd:any minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:complexType name="ClientData">
+        <xsd:sequence>
+          <xsd:element name="document" type="xsd:string"/>
+          <xsd:element name="names" type="xsd:string"/>
+          <xsd:element name="email" type="xsd:string"/>
+          <xsd:element name="celular" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:complexType name="PaymentData">
+        <xsd:sequence>
+          <xsd:element name="sessionId" type="xsd:string"/>
+          <xsd:element name="token" type="xsd:string"/>
+          <xsd:element name="document" type="xsd:string"/>
+          <xsd:element name="celular" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </types>
+
+  <message name="registerClientRequest">
+    <part name="document" type="xsd:string"/>
+    <part name="names" type="xsd:string"/>
+    <part name="email" type="xsd:string"/>
+    <part name="celular" type="xsd:string"/>
+  </message>
+  <message name="registerClientResponse">
+    <part name="result" type="tns:Response"/>
+  </message>
+
+  <message name="rechargeWalletRequest">
+    <part name="document" type="xsd:string"/>
+    <part name="celular" type="xsd:string"/>
+    <part name="amount" type="xsd:float"/>
+  </message>
+  <message name="rechargeWalletResponse">
+    <part name="result" type="tns:Response"/>
+  </message>
+
+  <message name="checkBalanceRequest">
+    <part name="document" type="xsd:string"/>
+    <part name="celular" type="xsd:string"/>
+  </message>
+  <message name="checkBalanceResponse">
+    <part name="result" type="tns:Response"/>
+  </message>
+
+  <message name="initiatePaymentRequest">
+    <part name="document" type="xsd:string"/>
+    <part name="celular" type="xsd:string"/>
+    <part name="amount" type="xsd:float"/>
+  </message>
+  <message name="initiatePaymentResponse">
+    <part name="result" type="tns:Response"/>
+  </message>
+
+  <message name="confirmPaymentRequest">
+    <part name="sessionId" type="xsd:string"/>
+    <part name="token" type="xsd:string"/>
+    <part name="document" type="xsd:string"/>
+    <part name="celular" type="xsd:string"/>
+  </message>
+  <message name="confirmPaymentResponse">
+    <part name="result" type="tns:Response"/>
+  </message>
+
+  <portType name="WalletServiceSOAPPort">
+    <operation name="registerClient">
+      <input message="tns:registerClientRequest"/>
+      <output message="tns:registerClientResponse"/>
+    </operation>
+    <operation name="rechargeWallet">
+      <input message="tns:rechargeWalletRequest"/>
+      <output message="tns:rechargeWalletResponse"/>
+    </operation>
+    <operation name="checkBalance">
+      <input message="tns:checkBalanceRequest"/>
+      <output message="tns:checkBalanceResponse"/>
+    </operation>
+    <operation name="initiatePayment">
+      <input message="tns:initiatePaymentRequest"/>
+      <output message="tns:initiatePaymentResponse"/>
+    </operation>
+    <operation name="confirmPayment">
+      <input message="tns:confirmPaymentRequest"/>
+      <output message="tns:confirmPaymentResponse"/>
+    </operation>
+  </portType>
+
+  <binding name="WalletServiceSOAPBinding" type="tns:WalletServiceSOAPPort">
+    <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+    
+    <operation name="registerClient">
+      <soap:operation soapAction="urn:WalletService#registerClient"/>
+      <input>
+        <soap:body use="encoded" namespace="urn:WalletService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:body use="encoded" namespace="urn:WalletService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    
+    <operation name="rechargeWallet">
+      <soap:operation soapAction="urn:WalletService#rechargeWallet"/>
+      <input>
+        <soap:body use="encoded" namespace="urn:WalletService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:body use="encoded" namespace="urn:WalletService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    
+    <operation name="checkBalance">
+      <soap:operation soapAction="urn:WalletService#checkBalance"/>
+      <input>
+        <soap:body use="encoded" namespace="urn:WalletService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:body use="encoded" namespace="urn:WalletService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    
+    <operation name="initiatePayment">
+      <soap:operation soapAction="urn:WalletService#initiatePayment"/>
+      <input>
+        <soap:body use="encoded" namespace="urn:WalletService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:body use="encoded" namespace="urn:WalletService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    
+    <operation name="confirmPayment">
+      <soap:operation soapAction="urn:WalletService#confirmPayment"/>
+      <input>
+        <soap:body use="encoded" namespace="urn:WalletService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:body use="encoded" namespace="urn:WalletService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+  </binding>
+
+  <service name="WalletService">
+    <port name="WalletServiceSOAPPort" binding="tns:WalletServiceSOAPBinding">
+      <soap:address location="http://localhost:8000/soap"/>
+    </port>
+  </service>
+</definitions>
