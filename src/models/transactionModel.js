@@ -3,12 +3,12 @@ class TransactionModel {
     this.db = db;
   }
 
-  async createTransaction(conn, clientId, type, amount, sessionId = null, token = null, expiresAt = null) {
+  async createTransaction(conn, clientId, type, amount,status= "pending",sessionId = null, token = null, expiresAt = null) {
     const [result] = await conn.execute(
       `INSERT INTO transactions 
        (client_id, type, amount, session_id, token, status, expires_at)
-       VALUES (?, ?, ?, ?, ?, 'pending', ?)`,
-      [clientId, type, amount, sessionId, token, expiresAt]
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [clientId, type, amount, sessionId, token, status,expiresAt]
     );
     return result.insertId;
   }

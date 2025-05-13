@@ -83,9 +83,7 @@ const service = {
         try {
           const response = await walletController.confirmPayment(
             args.sessionId,
-            args.token,
-            args.document,
-            args.celular
+            args.token
           );
           return ensureSoapResponse(response);
         } catch (error) {

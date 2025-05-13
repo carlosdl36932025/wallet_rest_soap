@@ -86,8 +86,6 @@
   <message name="confirmPaymentRequest">
     <part name="sessionId" type="xsd:string"/>
     <part name="token" type="xsd:string"/>
-    <part name="document" type="xsd:string"/>
-    <part name="celular" type="xsd:string"/>
   </message>
   <message name="confirmPaymentResponse">
     <part name="result" type="tns:Response"/>

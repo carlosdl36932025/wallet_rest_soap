@@ -78,7 +78,8 @@ class WalletController {
         conn,
         client.id, 
         'recharge', 
-        amount
+        amount,
+        'completed'
       );
       
       await this.walletModel.updateBalance(conn, client.id, amount);
@@ -162,6 +163,7 @@ class WalletController {
           client.id,
           'payment',
           amount,
+          'pending',
           sessionId,
           token,
           expiresAt
@@ -192,20 +194,14 @@ class WalletController {
     }
   }
 
-  async confirmPayment(sessionId, token, document, celular) {
+  async confirmPayment(sessionId, token) {
     let conn;
     try {
-      if (!sessionId || !token || !document || !celular) {
+      if (!sessionId || !token) {
         return this._formatResponse(false, '01', 'Todos los campos son requeridos');
       }
 
       conn = await this.db.beginTransaction();
-
-      const client = await this.clientModel.getClientByDocumentAndCelular(conn, document, celular);
-      if (!client) {
-        await conn.rollback();
-        return this._formatResponse(false, '03', 'Cliente no encontrado');
-      }
 
       const transaction = await this.transactionModel.getPendingPayment(conn, sessionId);
       if (!transaction) {
@@ -218,15 +214,10 @@ class WalletController {
         return this._formatResponse(false, '05', 'Token inválido');
       }
 
-      if (transaction.client_id !== client.id) {
-        await conn.rollback();
-        return this._formatResponse(false, '08', 'Datos de cliente no coinciden');
-      }
-
-      await this.walletModel.updateBalance(conn, client.id, -transaction.amount);
+      await this.walletModel.updateBalance(conn, transaction.client_id, -transaction.amount);
       await this.transactionModel.completeTransaction(conn, sessionId);
       
-      const newBalance = (await this.walletModel.getWalletByClientId(conn, client.id)).balance;
+      const newBalance = (await this.walletModel.getWalletByClientId(conn, transaction.client_id)).balance;
       
       await conn.commit();
 
